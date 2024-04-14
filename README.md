@@ -46,8 +46,7 @@ function loadGifFiles() {
     const filename = `${gifFolder}/${String(i).padStart(4, '0')}.gif`;
     gifFiles.push(filename);
   }
-  // Additional code...
-}
+
 You can use the provided batch file (rename_files.bat) included in the repository to rename all files in a folder in numerical order. Simply double-click the batch file, type in the folder location, and hit Enter. The command window will close, and the files will be renamed.
 
 Credits
