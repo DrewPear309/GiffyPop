@@ -24,7 +24,7 @@ A simple web application for creating a fullscreen slideshow using animated GIFs
    git clone https://github.com/your-username/animated-gif-slideshow.git
 Navigate to the project directory:
 
-bash
+
 Copy code
 cd animated-gif-slideshow
 Add your GIF files to the gif folder in the project directory. Ensure that the GIFs are named in numerical order starting at 0001.
@@ -38,7 +38,7 @@ The app automatically loads all GIF files from the gif folder. The number of GIF
 Example:
 
 In line 188
-
+```bash
 // Load GIF filenames
 function loadGifFiles() {
   // Let's assume you have 20 GIFs.
