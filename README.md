@@ -37,6 +37,7 @@ function loadGifFiles() {
   }
 }
 bash
+
 Renaming Files:
 
 Double-click rename_files.bat in your project directory.
