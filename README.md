@@ -36,7 +36,7 @@ function loadGifFiles() {
     gifFiles.push(filename);
   }
 }
-bash
+
 
 Renaming Files:
 
