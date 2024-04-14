@@ -24,7 +24,8 @@ A simple web application for creating a fullscreen slideshow using animated GIFs
    git clone https://github.com/your-username/animated-gif-slideshow.git
 Navigate to the project directory:
 
-```bash
+bash
+Copy code
 cd animated-gif-slideshow
 Add your GIF files to the gif folder in the project directory. Ensure that the GIFs are named in numerical order starting at 0001.
 
