@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Animated GIF Slideshow</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background-color: #000;
+      color: #fff;
+    }
+
+    #slideshow-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    #current-gif {
+  width: 100%;
+  height: 100%;
+}
+
+
+    #controls-menu {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background-color: transparent;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 10px 20px;
+      box-sizing: border-box;
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      border-radius: 20px 20px 0 0;
+      transform: translateY(100%);
+      transition: transform 0.3s ease-in-out;
+    }
+
+    #controls-menu.active {
+      transform: translateY(0);
+    }
+
+    #thumbnail-container {
+      display: flex;
+      overflow-x: auto; /* Enable horizontal scrolling */
+      width: 100%; /* Occupy full width */
+      margin: 5px 0;
+      padding: 5px;
+      justify-content: flex-start; /* Start from the left */
+      box-sizing: border-box;
+    }
+
+    #controls-menu button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      color: #fff;
+      background-color: #333;
+      margin-bottom: 10px;
+    }
+
+    #controls-menu input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 80%;
+      height: 10px;
+      background: #ddd;
+      border-radius: 5px;
+      cursor: pointer;
+      color:#000;
+    }
+
+    #controls-menu input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      background: #333;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+
+    #thumbnail-container {
+  display: flex;
+  overflow-x: auto; /* Enable horizontal scrolling */
+  width: 90%; /* Adjust width as needed */
+  margin: 5px auto; /* Center the thumbnail container and provide some vertical margin */
+  padding: 5px;
+  justify-content: flex-start; /* Start from the left */
+  box-sizing: border-box;
+}
+
+
+    #thumbnail-container img {
+  width: 96px;
+  height: 96px;
+  object-fit: cover;
+  margin-right: 10px; /* Increase margin for better spacing */
+  cursor: pointer;
+}
+
+/* Thin scrollbar track */
+#thumbnail-container::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Handle */
+#thumbnail-container::-webkit-scrollbar-thumb {
+  background: #000;
+  border-radius: 4px;
+}
+
+/* Handle on hover */
+#thumbnail-container::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+
+
+    #thumbnail-container img.active {
+      border: 1px solid #fff;
+    }
+
+    #menu-toggle {
+      position: fixed;
+      bottom: 10px;
+      right: 20px;
+      cursor: pointer;
+    }
+
+    #menu-arrow {
+      width: 30px;
+    }
+
+    @media (max-width: 600px) {
+      #controls-menu {
+        font-size: 0.8em;
+        padding: 5px 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="slideshow-container">
+    <img id="current-gif" src="" alt="Slide">
+  </div>
+  <div id="controls-menu">
+    <button id="play-pause">Play</button>SPEED
+    <input type="range" min=".5" max="5" value=".5" step=".5" id="speed-slider">
+    <div id="thumbnail-container"> </div>
+  </div>
+  <div id="menu-toggle">
+    <img id="menu-arrow" src="burger.svg" alt="Open Menu">
+  </div>
+
+  <script>
+    const gifFolder = "gif";
+    const gifContainer = document.getElementById('slideshow-container');
+    const currentGif = document.getElementById('current-gif');
+    const playPauseBtn = document.getElementById('play-pause');
+    const speedSlider = document.getElementById('speed-slider');
+    const thumbnailContainer = document.getElementById('thumbnail-container');
+    const menuToggle = document.getElementById('menu-toggle');
+    const menuArrow = document.getElementById('menu-arrow');
+    const controlsMenu = document.getElementById('controls-menu');
+
+    let gifFiles = [];
+    let currentGifIndex = 0;
+    let isPlaying = false;
+    let slideInterval;
+
+    // Load GIF filenames
+    function loadGifFiles() {
+      // Let's assume you have at least 5 GIFs. You can adjust this.
+      for (let i = 1; i <= 20; i++) {
+        const filename = `${gifFolder}/${String(i).padStart(4, '0')}.gif`;
+        gifFiles.push(filename);
+      }
+      createThumbnails();
+      loadSlide();
+      playPauseBtn.click(); // Trigger a click on the play button
+      // Start by loading the first slide
+    }
+
+    // Create thumbnails
+    function createThumbnails() {
+      gifFiles.forEach((filename, index) => {
+        const img = document.createElement('img');
+        img.src = filename;
+        img.addEventListener('click', () => changeSlide(index));
+        thumbnailContainer.appendChild(img);
+      });
+    }
+
+    // Load a slide
+    function loadSlide() {
+      currentGif.src = gifFiles[currentGifIndex];
+      updateActiveThumbnail();
+    }
+
+    // Play/Pause toggle
+    function togglePlay() {
+      isPlaying = !isPlaying;
+      playPauseBtn.textContent = isPlaying ? "Pause" : "Play";
+
+      if (isPlaying) {
+        slideInterval = setInterval(nextSlide, speedSlider.value * 1000);
+      } else {
+        clearInterval(slideInterval);
+      }
+    }
+
+    // Next slide
+    function nextSlide() {
+      currentGifIndex = (currentGifIndex + 1) % gifFiles.length;
+      loadSlide();
+    }
+
+    // Change slide based on thumbnail click
+    function changeSlide(index) {
+      currentGifIndex = index;
+      loadSlide();
+      // If slideshow is playing, reset the interval
+      if (isPlaying) {
+        clearInterval(slideInterval);
+        slideInterval = setInterval(nextSlide, speedSlider.value * 1000);
+      }
+    }
+
+    // Update active thumbnail
+    function updateActiveThumbnail() {
+      const thumbnails = thumbnailContainer.querySelectorAll('img');
+      thumbnails.forEach((thumb, index) => {
+        thumb.classList.toggle('active', index === currentGifIndex);
+      });
+    }
+
+    // Toggle Controls Menu
+    function toggleMenu() {
+      controlsMenu.classList.toggle('active');
+      const isMenuOpen = controlsMenu.classList.contains('active');
+      menuArrow.src = isMenuOpen ? "burger.svg" : "burger.svg"; // Use burger.svg for both states
+    }
+
+    // Event Listeners
+    playPauseBtn.addEventListener('click', togglePlay);
+    speedSlider.addEventListener('change', () => { // Use 'change' for more responsive adjustments
+      if (isPlaying) {
+        clearInterval(slideInterval);
+        slideInterval = setInterval(nextSlide, speedSlider.value * 1000);
+      }
+    });
+    menuToggle.addEventListener('click', toggleMenu);
+
+    // Start the slideshow
+    loadGifFiles(); 
+  </script>
+</body>
+</html>
