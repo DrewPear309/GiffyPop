@@ -18,7 +18,7 @@ Usage
 
 1. Clone the repository:
    ```bash
-   git clone [https://github.com/your-username/animated-gif-slideshow.git](https://github.com/your-username/animated-gif-slideshow.git)
+   git clone [https://github.com/drewpear309/animated-gif-slideshow.git]
 Navigate to the project:
 
 ```bash
