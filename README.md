@@ -36,7 +36,7 @@ Configuration
 
 Number of GIFs:  Update the loadGifFiles()  function in index.html to reflect the  number of GIFs you're using:
 
-```bash
+
 function loadGifFiles() {
   // Example: If you have 20 GIFs
   for (let i = 1; i <= 20; i++) {
