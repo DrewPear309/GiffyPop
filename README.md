@@ -21,9 +21,9 @@ Usage
    git clone [https://github.com/your-username/animated-gif-slideshow.git](https://github.com/your-username/animated-gif-slideshow.git)
 Navigate to the project:
 
-Bash
+```bash
 cd animated-gif-slideshow
-Use code with caution.
+
 Add GIFs:
 
 Place your GIF files in the /gif folder.
@@ -36,7 +36,7 @@ Configuration
 
 Number of GIFs:  Update the loadGifFiles()  function in index.html to reflect the  number of GIFs you're using:
 
-JavaScript
+```bash
 function loadGifFiles() {
   // Example: If you have 20 GIFs
   for (let i = 1; i <= 20; i++) {
@@ -44,7 +44,7 @@ function loadGifFiles() {
     gifFiles.push(filename);
   }
 }
-Use code with caution.
+
 Renaming Files:
 
 Double-click rename_files.bat in your project directory.
